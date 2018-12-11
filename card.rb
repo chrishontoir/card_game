@@ -1,12 +1,16 @@
 class Card
 
-  attr_reader :name, :health, :damage, :effect
+  attr_reader :name, :health, :damage, :cost
 
-  def initialize(name, health, damage, effect)
+  def initialize(name, health, damage, cost)
     @name = name
     @health = health
     @damage = damage
-    @effect = effect
+    @cost = cost
+  end
+
+  def card_details
+    return "#{name} | Health: #{health} | Damage: #{damage} | Cost: #{cost}"
   end
 
 
