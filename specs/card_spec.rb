@@ -12,5 +12,15 @@ class CardTest < MiniTest::Test
     assert_equal("Name", @card.name)
   end
 
+  def test_health
+    assert_equal(5, @card.health)
+  end
 
+  def test_damage
+    assert_equal(5, @card.damage)
+  end
+
+  def test_effect
+    assert_equal(2, @card.effect)
+  end
 end
