@@ -6,7 +6,11 @@ def create_new_game
   @player1 = Player.new("", 30, [], "")
   @player2 = Player.new("", 30, [], "")
 
-  @default_deck = Deck.new("Default", [])
+  @player1_played = []
+  @player2_played = []
+
+  @default_deck_1 = Deck.new("Default", [])
+  @default_deck_2 = Deck.new("Default", [])
   # @player1_deck1 = Deck.new("Player1, Deck1", [])
   # @player2_deck1 = Deck.new("Player2, Deck1", [])
 
@@ -16,11 +20,16 @@ def create_new_game
   @thief = Card.new("Thief", 2, 6, 3)
   @guard = Card.new("Guard", 2, 0, 1)
 
-  @default_deck.add_card_to_deck(@mercenary)
-  @default_deck.add_card_to_deck(@mercenary)
-  @default_deck.add_card_to_deck(@archer)
-  @default_deck.add_card_to_deck(@archer)
-  @default_deck.add_card_to_deck(@wizard)
+  @default_deck_1.add_card_to_deck(@mercenary)
+  @default_deck_1.add_card_to_deck(@mercenary)
+  @default_deck_1.add_card_to_deck(@archer)
+  @default_deck_1.add_card_to_deck(@archer)
+  @default_deck_1.add_card_to_deck(@wizard)
+  @default_deck_2.add_card_to_deck(@mercenary)
+  @default_deck_2.add_card_to_deck(@mercenary)
+  @default_deck_2.add_card_to_deck(@archer)
+  @default_deck_2.add_card_to_deck(@archer)
+  @default_deck_2.add_card_to_deck(@wizard)
 end
 
 def get_player_names
@@ -47,12 +56,12 @@ end
 
 def setup_decks
   if @player1.player_deck_count == 0
-    @player1.player_add_deck(@default_deck)
+    @player1.player_add_deck(@default_deck_1)
     p "#{@player1.player_name} has been assigned the Default Deck."
   end
 
   if @player2.player_deck_count == 0
-    @player2.player_add_deck(@default_deck)
+    @player2.player_add_deck(@default_deck_2)
     p "#{@player2.player_name} has been assigned the Default Deck."
   end
 end
@@ -229,6 +238,84 @@ def player_choose_deck(player)
   player_deck_choice = gets.chomp
   player.player_chosen_deck = player_deck_choice
   p player.player_chosen_deck
+  p "----------"
+end
+
+def play_game(player1, player2)
+  player1_power = 1
+  player2_power = 1
+  while player1.player_health > 0 || player2.player_health > 0
+    system "clear"
+    p "------------------------------"
+    p "-----------WELCOME!-----------"
+    p "------------------------------"
+    p "PLAYER: #{player1.player_name}"
+    p "HEALTH: #{player1.player_health}, POWER: #{player1_power}"
+    p "----------"
+    for deck1 in player1.player_decks
+      if deck1.name.upcase == player1.player_chosen_deck.upcase
+        deck1_index = player1.player_decks.index(deck1)
+        for card1 in deck1.card_array
+          p card1.card_details
+        end
+        if deck1.deck_count == 0
+          p "No cards remaining."
+        end
+      end
+    end
+    p "----------"
+    p "Enter the position of the card you want to play."
+    player1_position = gets.chomp
+    # player1_position -= 1
+    @player1_played.unshift(player1.player_decks[deck1_index].card_array[(player1_position.to_i) - 1].card_details)
+    player1.player_decks[deck1_index].card_array.delete_at((player1_position.to_i) - 1)
+    for card1 in @player1_played
+      p card1
+    end
+    p "----------"
+    p "Continue? (y/n):"
+    player_continue = gets.chomp
+    system "clear"
+
+    p "------------------------------"
+    p "-----------WELCOME!-----------"
+    p "------------------------------"
+    p "PLAYER: #{player2.player_name}"
+    p "HEALTH: #{player2.player_health}, POWER: #{player2_power}"
+    p "----------"
+    for deck2 in player2.player_decks
+      if deck2.name.upcase == player2.player_chosen_deck.upcase
+        deck2_index = player2.player_decks.index(deck2)
+        for card2 in deck2.card_array
+          if deck2.deck_count != 0
+            p card2.card_details
+          else
+            p "No cards remaining"
+          end
+        end
+      end
+    end
+
+    p "----------"
+    p "Enter the position of the card you want to play."
+    player2_position = gets.chomp
+    # player1_position -= 1
+    @player2_played.unshift(player2.player_decks[deck2_index].card_array[(player2_position.to_i) - 1].card_details)
+    player2.player_decks[deck2_index].card_array.delete_at((player2_position.to_i) - 1)
+    for card2 in @player2_played
+      p card2
+    end
+    p "----------"
+    p "Continue? (y/n):"
+    player2_continue = gets.chomp
+    system "clear"
+
+    player1_power += 1 if player1_power < 5
+    player2_power += 1 if player2_power < 5
+
+    # p player1.player_decks[deck_index].card_array
+
+  end
 end
 
 def pre_game
@@ -248,6 +335,7 @@ def pre_game
   if start_answer == "y"
     system "clear"
     p "Let's begin!"
+    play_game(@player1, @player2)
   else
     pre_game()
   end
@@ -265,6 +353,8 @@ setup_decks()
 p "----------"
 
 pre_game()
+
+
 
 
 
