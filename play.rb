@@ -14,6 +14,7 @@ def create_new_game
   @archer = Card.new("Archer", 3, 6, 1)
   @wizard = Card.new("Wizard", 4, 4, 4)
   @thief = Card.new("Thief", 2, 6, 3)
+  @guard = Card.new("Guard", 2, 0, 1)
 
   @default_deck.add_card_to_deck(@mercenary)
   @default_deck.add_card_to_deck(@mercenary)
@@ -62,6 +63,7 @@ def available_cards
   p @archer.card_details
   p @wizard.card_details
   p @thief.card_details
+  p @guard.card_details
 end
 
 def build_new_deck(player)
@@ -76,7 +78,7 @@ def build_new_deck(player)
   p "----------"
   available_cards()
   p "----------"
-  p "Add cards to your new deck (#{deck_name}):"
+  p "Add cards to your new deck (#{deck_name.upcase}):"
   while counter < 5
 
     new_card = gets.chomp
@@ -97,6 +99,10 @@ def build_new_deck(player)
       player.player_decks[-1].card_array.push(@thief)
       counter += 1
       p "#{counter} / 5"
+    elsif new_card == "guard" || new_card == "gua"
+      player.player_decks[-1].card_array.push(@guard)
+      counter += 1
+      p "#{counter} / 5"
     elsif new_card == "delete" || new_card == "remove" || new_card == "-"
       player.player_decks[-1].card_array.pop()
       counter -= 1
@@ -111,7 +117,7 @@ def build_new_deck(player)
     end
   end
   p "----------"
-  p "New deck created: #{deck_name} "
+  p "New deck created (#{deck_name.upcase}):"
   for card in player.player_decks[-1].card_array
       p card.card_details
   end
@@ -177,13 +183,16 @@ def player_options(player)
   elsif player_answer == "build"
     build_new_deck(player)
     p "----------"
-    p "#{player.player_name}, are you ready to continue? (y/n):"
+    p "Would you like to save or delete this deck?"
     continue_answer = gets.chomp
-      if continue_answer == "n"
-        player_options(player)
-      elsif continue_answer != "n" && continue_answer != "y"
+      if continue_answer == "delete"
+        system "clear"
+        p "Deck deleted"
+        player.player_decks.pop()
+      elsif continue_answer != "save" && continue_answer != "delete"
         p "That option was not recognised. Try again."
       end
+      player_options(player)
   elsif player_answer != "y" && player_answer != "build" && player_answer != "n"
     system "clear"
     p "Option not recognised, try again."
@@ -244,12 +253,7 @@ def pre_game
   end
 end
 
-
-
-
-
-
-
+# GAME RUNNING
 create_new_game()
 
 get_player_names()
