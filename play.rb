@@ -241,6 +241,25 @@ def player_choose_deck(player)
   p "----------"
 end
 
+def play_card(player, deck_index)
+  p "Enter the position of the card you want to play."
+  player_position = gets.chomp
+  # player1_position -= 1
+  if player.player_decks[deck_index].card_array[(player_position.to_i) - 1].cost <= player.player_power
+    player.player_played.unshift(player.player_decks[deck_index].card_array[(player_position.to_i) - 1])
+    player.player_decks[deck_index].card_array.delete_at((player_position.to_i) - 1)
+    total_damage = 0
+    for card in player.player_played
+      p card.card_details
+      total_damage += card.damage
+    end
+    p total_damage
+  else
+    p "Not enough power to play that card."
+    play_card(player, deck_index)
+  end
+end
+
 def player_turn(player)
   # system "clear"
   p "------------------------------"
@@ -261,23 +280,24 @@ def player_turn(player)
     end
   end
   p "----------"
-  p "Enter the position of the card you want to play."
-  player_position = gets.chomp
-  # player1_position -= 1
-  if player.player_decks[deck_index].card_array[(player_position.to_i) - 1].cost <= player.player_power
-    player.player_played.unshift(player.player_decks[deck_index].card_array[(player_position.to_i) - 1])
-    player.player_decks[deck_index].card_array.delete_at((player_position.to_i) - 1)
-    total_damage = 0
-    for card in player.player_played
-      p card.card_details
-      total_damage += card.damage
-    end
-    p total_damage
-  else
-    system "clear"
-    p "Not enough power to play that card."
-    # player_turn(player)
-  end
+  play_card(player, deck_index)
+  # p "Enter the position of the card you want to play."
+  # player_position = gets.chomp
+  # # player1_position -= 1
+  # if player.player_decks[deck_index].card_array[(player_position.to_i) - 1].cost <= player.player_power
+  #   player.player_played.unshift(player.player_decks[deck_index].card_array[(player_position.to_i) - 1])
+  #   player.player_decks[deck_index].card_array.delete_at((player_position.to_i) - 1)
+  #   total_damage = 0
+  #   for card in player.player_played
+  #     p card.card_details
+  #     total_damage += card.damage
+  #   end
+  #   p total_damage
+  # else
+  #   system "clear"
+  #   p "Not enough power to play that card."
+  #   # player_turn(player)
+  # end
   p "----------"
   p "Continue? (y/n):"
   player_continue = gets.chomp
@@ -290,6 +310,14 @@ def play_game(player1, player2)
   while player1.player_health > 0 || player2.player_health > 0
     player_turn(player1)
     player_turn(player2)
+  end
+
+  if player1.player_health == 0
+    p "#{player2.player_name} wins!"
+  end
+
+  if player2.player_health == 0
+    p "#{player1.player_name} wins!"
   end
 end
 
