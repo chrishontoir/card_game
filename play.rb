@@ -3,8 +3,8 @@ require_relative('deck.rb')
 require_relative('player.rb')
 
 def create_new_game
-  @player1 = Player.new("", 30, [], "")
-  @player2 = Player.new("", 30, [], "")
+  @player1 = Player.new("", 30, 1, [], "", [])
+  @player2 = Player.new("", 30, 1, [], "", [])
 
   @player1_played = []
   @player2_played = []
@@ -241,82 +241,134 @@ def player_choose_deck(player)
   p "----------"
 end
 
+def player_turn(player)
+  # system "clear"
+  p "------------------------------"
+  p "-----------WELCOME!-----------"
+  p "------------------------------"
+  p "PLAYER: #{player.player_name}"
+  p "HEALTH: #{player.player_health}, POWER: #{player.player_power}"
+  p "----------"
+  for deck in player.player_decks
+    if deck.name.upcase == player.player_chosen_deck.upcase
+      deck_index = player.player_decks.index(deck)
+      for card in deck.card_array
+        p card.card_details
+      end
+      if deck.deck_count == 0
+        p "No cards remaining."
+      end
+    end
+  end
+  p "----------"
+  p "Enter the position of the card you want to play."
+  player_position = gets.chomp
+  # player1_position -= 1
+  if player.player_decks[deck_index].card_array[(player_position.to_i) - 1].cost <= player.player_power
+    player.player_played.unshift(player.player_decks[deck_index].card_array[(player_position.to_i) - 1])
+    player.player_decks[deck_index].card_array.delete_at((player_position.to_i) - 1)
+    total_damage = 0
+    for card in player.player_played
+      p card.card_details
+      total_damage += card.damage
+    end
+    p total_damage
+  else
+    system "clear"
+    p "Not enough power to play that card."
+    # player_turn(player)
+  end
+  p "----------"
+  p "Continue? (y/n):"
+  player_continue = gets.chomp
+  system "clear"
+
+  player.player_gain_power(1)
+end
+
 def play_game(player1, player2)
-  player1_power = 1
-  player2_power = 1
   while player1.player_health > 0 || player2.player_health > 0
-    system "clear"
-    p "------------------------------"
-    p "-----------WELCOME!-----------"
-    p "------------------------------"
-    p "PLAYER: #{player1.player_name}"
-    p "HEALTH: #{player1.player_health}, POWER: #{player1_power}"
-    p "----------"
-    for deck1 in player1.player_decks
-      if deck1.name.upcase == player1.player_chosen_deck.upcase
-        deck1_index = player1.player_decks.index(deck1)
-        for card1 in deck1.card_array
-          p card1.card_details
-        end
-        if deck1.deck_count == 0
-          p "No cards remaining."
-        end
-      end
-    end
-    p "----------"
-    p "Enter the position of the card you want to play."
-    player1_position = gets.chomp
-    # player1_position -= 1
-    @player1_played.unshift(player1.player_decks[deck1_index].card_array[(player1_position.to_i) - 1].card_details)
-    player1.player_decks[deck1_index].card_array.delete_at((player1_position.to_i) - 1)
-    for card1 in @player1_played
-      p card1
-    end
-    p "----------"
-    p "Continue? (y/n):"
-    player_continue = gets.chomp
-    system "clear"
-
-    p "------------------------------"
-    p "-----------WELCOME!-----------"
-    p "------------------------------"
-    p "PLAYER: #{player2.player_name}"
-    p "HEALTH: #{player2.player_health}, POWER: #{player2_power}"
-    p "----------"
-    for deck2 in player2.player_decks
-      if deck2.name.upcase == player2.player_chosen_deck.upcase
-        deck2_index = player2.player_decks.index(deck2)
-        for card2 in deck2.card_array
-          if deck2.deck_count != 0
-            p card2.card_details
-          else
-            p "No cards remaining"
-          end
-        end
-      end
-    end
-
-    p "----------"
-    p "Enter the position of the card you want to play."
-    player2_position = gets.chomp
-    # player1_position -= 1
-    @player2_played.unshift(player2.player_decks[deck2_index].card_array[(player2_position.to_i) - 1].card_details)
-    player2.player_decks[deck2_index].card_array.delete_at((player2_position.to_i) - 1)
-    for card2 in @player2_played
-      p card2
-    end
-    p "----------"
-    p "Continue? (y/n):"
-    player2_continue = gets.chomp
-    system "clear"
-
-    player1_power += 1 if player1_power < 5
-    player2_power += 1 if player2_power < 5
-
-    # p player1.player_decks[deck_index].card_array
-
+    player_turn(player1)
+    player_turn(player2)
   end
 end
+
+# def play_game(player1, player2)
+#   player1_power = 1
+#   player2_power = 1
+#   while player1.player_health > 0 || player2.player_health > 0
+#     system "clear"
+#     p "------------------------------"
+#     p "-----------WELCOME!-----------"
+#     p "------------------------------"
+#     p "PLAYER: #{player1.player_name}"
+#     p "HEALTH: #{player1.player_health}, POWER: #{player1_power}"
+#     p "----------"
+#     for deck1 in player1.player_decks
+#       if deck1.name.upcase == player1.player_chosen_deck.upcase
+#         deck1_index = player1.player_decks.index(deck1)
+#         for card1 in deck1.card_array
+#           p card1.card_details
+#         end
+#         if deck1.deck_count == 0
+#           p "No cards remaining."
+#         end
+#       end
+#     end
+#     p "----------"
+#     p "Enter the position of the card you want to play."
+#     player1_position = gets.chomp
+#     # player1_position -= 1
+#     @player1_played.unshift(player1.player_decks[deck1_index].card_array[(player1_position.to_i) - 1].card_details)
+#     player1.player_decks[deck1_index].card_array.delete_at((player1_position.to_i) - 1)
+#     for card1 in @player1_played
+#       p card1
+#     end
+#     p "----------"
+#     p "Continue? (y/n):"
+#     player_continue = gets.chomp
+#     system "clear"
+#
+#     p "------------------------------"
+#     p "-----------WELCOME!-----------"
+#     p "------------------------------"
+#     p "PLAYER: #{player2.player_name}"
+#     p "HEALTH: #{player2.player_health}, POWER: #{player2_power}"
+#     p "----------"
+#     for deck2 in player2.player_decks
+#       if deck2.name.upcase == player2.player_chosen_deck.upcase
+#         deck2_index = player2.player_decks.index(deck2)
+#         for card2 in deck2.card_array
+#           if deck2.deck_count != 0
+#             p card2.card_details
+#           else
+#             p "No cards remaining"
+#           end
+#         end
+#       end
+#     end
+#
+#     p "----------"
+#     p "Enter the position of the card you want to play."
+#     player2_position = gets.chomp
+#     # player1_position -= 1
+#     @player2_played.unshift(player2.player_decks[deck2_index].card_array[(player2_position.to_i) - 1].card_details)
+#     player2.player_decks[deck2_index].card_array.delete_at((player2_position.to_i) - 1)
+#     for card2 in @player2_played
+#       p card2
+#     end
+#     p "----------"
+#     p "Continue? (y/n):"
+#     player2_continue = gets.chomp
+#     system "clear"
+#
+#     player1_power += 1 if player1_power < 5
+#     player2_power += 1 if player2_power < 5
+#
+#     # p player1.player_decks[deck_index].card_array
+#
+#   end
+# end
 
 def pre_game
   player_options(@player1)
