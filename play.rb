@@ -1,6 +1,7 @@
 require_relative('card.rb')
 require_relative('deck.rb')
 require_relative('player.rb')
+require('colorize')
 
 def create_new_game
   @player1 = Player.new("", 30, 1, [], "", [])
@@ -35,34 +36,34 @@ end
 def get_player_names
   system "clear"
 
-  p "Player 1 enter your name:"
+  puts "Player 1 enter your name:"
   @player1.player_name = gets.chomp.capitalize
 
   system "clear"
 
-  p "Player 2 enter your name:"
+  puts "Player 2 enter your name:"
   @player2.player_name = gets.chomp.capitalize
 
   system "clear"
 
-  p "Welcome #{@player1.player_name}."
-  p "You have #{@player1.player_deck_count} decks."
+  puts "Welcome #{@player1.player_name}."
+  puts "You have #{@player1.player_deck_count} decks.".red
 
-  p "----------"
+  puts "----------".white
 
-  p "Welcome #{@player2.player_name}."
-  p "You have #{@player2.player_deck_count} decks."
+  puts "Welcome #{@player2.player_name}."
+  puts "You have #{@player2.player_deck_count} decks.".red
 end
 
 def setup_decks
   if @player1.player_deck_count == 0
     @player1.player_add_deck(@default_deck_1)
-    p "#{@player1.player_name} has been assigned the Default Deck."
+    puts "#{@player1.player_name} has been assigned the Default Deck.".green
   end
 
   if @player2.player_deck_count == 0
     @player2.player_add_deck(@default_deck_2)
-    p "#{@player2.player_name} has been assigned the Default Deck."
+    puts "#{@player2.player_name} has been assigned the Default Deck.".green
   end
 end
 
@@ -182,7 +183,7 @@ end
 # end
 
 def player_options(player)
-  p "#{player.player_name}, would you like to view your decks (y/n), or build a new deck (build)?"
+  puts "#{player.player_name}, would you like to view your decks " + "(y/n)".green + ", or build a new deck " + "(build)?".green
   player_answer = gets.chomp.downcase
 
   if player_answer == "y"
@@ -212,16 +213,16 @@ end
 def show_player_decks(player)
   total_decks = player.player_deck_count
   counter = 0
-  p "PLAYER: #{player.player_name.upcase}"
-  p "----------"
+  puts "PLAYER: #{player.player_name.upcase}"
+  puts "----------".white
   for deck in player.player_decks
-    p "DECK: #{player.player_decks[counter].name.upcase}"
+    puts "DECK: #{player.player_decks[counter].name.upcase}"
     # p @player1.player_decks[0].
     for card in player.player_decks[counter].card_array
-      p card.card_details
+      puts card.card_details
     end
     counter += 1
-    p "----------"
+    puts "----------".white
   end
 end
 
@@ -266,7 +267,7 @@ def player_turn(player)
   p "-----------WELCOME!-----------"
   p "------------------------------"
   p "PLAYER: #{player.player_name}"
-  p "HEALTH: #{player.player_health}, POWER: #{player.player_power}"
+  p "HEALTH: #{player.player_health}, POWER: #{player.player_power.green}"
   p "----------"
   for deck in player.player_decks
     if deck.name.upcase == player.player_chosen_deck.upcase
@@ -426,11 +427,11 @@ create_new_game()
 
 get_player_names()
 
-p "----------"
+puts "----------".white
 
 setup_decks()
 
-p "----------"
+puts "----------".white
 
 pre_game()
 
