@@ -1,11 +1,12 @@
 class Player
 
-  attr_accessor :player_name, :player_health, :player_decks
+  attr_accessor :player_name, :player_health, :player_decks, :player_chosen_deck
 
-  def initialize(player_name, player_health, player_decks)
+  def initialize(player_name, player_health, player_decks, player_chosen_deck)
     @player_name = player_name
     @player_health = player_health
     @player_decks = player_decks
+    @player_chosen_deck = player_chosen_deck
   end
 
   def player_lose_health(value)

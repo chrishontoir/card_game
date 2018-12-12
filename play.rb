@@ -3,12 +3,12 @@ require_relative('deck.rb')
 require_relative('player.rb')
 
 def create_new_game
-  @player1 = Player.new("", 30, [])
-  @player2 = Player.new("", 30, [])
+  @player1 = Player.new("", 30, [], "")
+  @player2 = Player.new("", 30, [], "")
 
-  @default_deck = Deck.new([])
-  @player1_deck1 = Deck.new([])
-  @player2_deck1 = Deck.new([])
+  @default_deck = Deck.new("Default", [])
+  # @player1_deck1 = Deck.new("Player1, Deck1", [])
+  # @player2_deck1 = Deck.new("Player2, Deck1", [])
 
   @mercenary = Card.new("Mercenary", 5, 5, 2)
   @archer = Card.new("Archer", 3, 6, 1)
@@ -66,15 +66,17 @@ end
 
 def build_new_deck(player)
   counter = 0
-  player.player_add_deck(player_deck1)
+  p "Enter a deck name:"
+  deck_name = gets.chomp
+  new_deck = Deck.new("#{deck_name}", [])
+  player.player_add_deck(new_deck)
   system "clear"
-  p player
+  # p player.player_decks
   p "You now have #{player.player_deck_count} decks."
-  p player.player_decks
   p "----------"
   available_cards()
   p "----------"
-  p "Add cards to your new deck:"
+  p "Add cards to your new deck (#{deck_name}):"
   while counter < 5
 
     new_card = gets.chomp
@@ -109,78 +111,136 @@ def build_new_deck(player)
     end
   end
   p "----------"
-  p "New deck created: "
+  p "New deck created: #{deck_name} "
   for card in player.player_decks[-1].card_array
       p card.card_details
   end
 end
 
-def build_new_deck_player_1
-  counter = 0
-  @player1.player_add_deck(@player1_deck1)
-  system "clear"
-  p "You now have #{@player1.player_deck_count} decks."
-  p "----------"
-  available_cards()
-  p "----------"
-  p "Add cards to your new deck:"
-  while counter < 5
-
-    new_card = gets.chomp
-    new_card.downcase!
-    if new_card == "wizard" || new_card == "wiz"
-      @player1.player_decks[-1].card_array.push(@wizard)
-      counter += 1
-      p "#{counter} / 5"
-    elsif new_card == "mercenary" || new_card == "merc"
-      @player1.player_decks[-1].card_array.push(@mercenary)
-      counter += 1
-      p "#{counter} / 5"
-    elsif new_card == "archer" || new_card == "arc"
-      @player1.player_decks[-1].card_array.push(@archer)
-      counter += 1
-      p "#{counter} / 5"
-    elsif new_card == "thief" || new_card == "thi"
-      @player1.player_decks[-1].card_array.push(@thief)
-      counter += 1
-      p "#{counter} / 5"
-    elsif new_card == "delete" || new_card == "remove" || new_card == "-"
-      @player1.player_decks[-1].card_array.pop()
-      counter -= 1
-      p "#{counter} / 5"
-    elsif new_card == "?" || new_card == "help" || new_card == "info"
-      p "HELP - Type the name of a card that you want to add to your deck. To remove a card from your deck, type 'delete', 'remove' or '-'."
-    elsif new_card == "cancel"
-      system "clear"
-      player_options(@player1)
-    else
-      p "I don't recognise that command, try again..."
-    end
-  end
-  p "----------"
-  p "New deck created: "
-  for card in @player1.player_decks[-1].card_array
-      p card.card_details
-  end
-end
+# def build_new_deck_player_1
+#   counter = 0
+#   @player1.player_add_deck(@player1_deck1)
+#   system "clear"
+#   p "You now have #{@player1.player_deck_count} decks."
+#   p "----------"
+#   available_cards()
+#   p "----------"
+#   p "Add cards to your new deck:"
+#   while counter < 5
+#
+#     new_card = gets.chomp
+#     new_card.downcase!
+#     if new_card == "wizard" || new_card == "wiz"
+#       @player1.player_decks[-1].card_array.push(@wizard)
+#       counter += 1
+#       p "#{counter} / 5"
+#     elsif new_card == "mercenary" || new_card == "merc"
+#       @player1.player_decks[-1].card_array.push(@mercenary)
+#       counter += 1
+#       p "#{counter} / 5"
+#     elsif new_card == "archer" || new_card == "arc"
+#       @player1.player_decks[-1].card_array.push(@archer)
+#       counter += 1
+#       p "#{counter} / 5"
+#     elsif new_card == "thief" || new_card == "thi"
+#       @player1.player_decks[-1].card_array.push(@thief)
+#       counter += 1
+#       p "#{counter} / 5"
+#     elsif new_card == "delete" || new_card == "remove" || new_card == "-"
+#       @player1.player_decks[-1].card_array.pop()
+#       counter -= 1
+#       p "#{counter} / 5"
+#     elsif new_card == "?" || new_card == "help" || new_card == "info"
+#       p "HELP - Type the name of a card that you want to add to your deck. To remove a card from your deck, type 'delete', 'remove' or '-'."
+#     elsif new_card == "cancel"
+#       system "clear"
+#       player_options(@player1)
+#     else
+#       p "I don't recognise that command, try again..."
+#     end
+#   end
+#   p "----------"
+#   p "New deck created: "
+#   for card in @player1.player_decks[-1].card_array
+#       p card.card_details
+#   end
+# end
 
 def player_options(player)
-  p "#{player.player_name}, would you like to view your cards (y/n), or build a new deck (build)?"
+  p "#{player.player_name}, would you like to view your decks (y/n), or build a new deck (build)?"
   player_answer = gets.chomp.downcase
 
   if player_answer == "y"
     system "clear"
-    p "DEFAULT DECK:"
-    # p @player1.player_decks[0].
-    for card in player.player_decks[0].card_array
-      p card.card_details
-    end
-    p "----------"
+    show_player_decks(player)
+    player_options(player)
   elsif player_answer == "build"
     build_new_deck(player)
     p "----------"
     p "#{player.player_name}, are you ready to continue? (y/n):"
     continue_answer = gets.chomp
+      if continue_answer == "n"
+        player_options(player)
+      elsif continue_answer != "n" && continue_answer != "y"
+        p "That option was not recognised. Try again."
+      end
+  elsif player_answer != "y" && player_answer != "build" && player_answer != "n"
+    system "clear"
+    p "Option not recognised, try again."
+    player_options(player)
+  end
+end
+
+def show_player_decks(player)
+  total_decks = player.player_deck_count
+  counter = 0
+  p "PLAYER: #{player.player_name.upcase}"
+  p "----------"
+  for deck in player.player_decks
+    p "DECK: #{player.player_decks[counter].name.upcase}"
+    # p @player1.player_decks[0].
+    for card in player.player_decks[counter].card_array
+      p card.card_details
+    end
+    counter += 1
+    p "----------"
+  end
+end
+
+def player_choose_deck(player)
+  p "#{player.player_name}, choose which deck you would like to use:"
+  all_decks = []
+  # p player.player_decks[0].name
+  # player_deck_choice = gets.chomp
+
+  for deck in player.player_decks
+    all_decks.push(deck.name)
+  end
+  p all_decks
+  player_deck_choice = gets.chomp
+  player.player_chosen_deck = player_deck_choice
+  p player.player_chosen_deck
+end
+
+def pre_game
+  player_options(@player1)
+
+  player_options(@player2)
+
+  system "clear"
+
+  player_choose_deck(@player1)
+
+  player_choose_deck(@player2)
+
+  p "Ready to start? (y/n)"
+  start_answer = gets.chomp
+
+  if start_answer == "y"
+    system "clear"
+    p "Let's begin!"
+  else
+    pre_game()
   end
 end
 
@@ -200,9 +260,10 @@ setup_decks()
 
 p "----------"
 
-player_options(@player1)
+pre_game()
 
-player_options(@player2)
+
+
 
 
 
@@ -238,13 +299,3 @@ player_options(@player2)
 # elsif player1_answer == "build"
 #   build_new_deck(@player2)
 # end
-
-p "Ready to start? (y/n)"
-start_answer = gets.chomp
-
-if start_answer == "y"
-  system "clear"
-  p "Let's begin!"
-else
-  p "Ok. Restart the game when you are ready to play."
-end
