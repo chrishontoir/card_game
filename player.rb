@@ -1,13 +1,14 @@
 class Player
 
-  attr_accessor :player_name, :player_health, :player_power, :player_decks, :player_chosen_deck, :player_played
+  attr_accessor :player_name, :player_health, :player_power, :player_decks, :player_chosen_deck, :player_playing_deck, :player_played
 
-  def initialize(player_name, player_health, player_power, player_decks, player_chosen_deck, player_played)
+  def initialize(player_name, player_health, player_power, player_decks, player_chosen_deck, player_playing_deck, player_played)
     @player_name = player_name
     @player_health = player_health
     @player_power = player_power
     @player_decks = player_decks
     @player_chosen_deck = player_chosen_deck
+    @player_playing_deck = player_playing_deck
     @player_played = player_played
   end
 
