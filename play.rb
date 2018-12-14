@@ -253,22 +253,22 @@ def play_card(player)
     player_position = gets.chomp
     # player1_position -= 1
     if player_position == "" || player_position == "pass"
-      p "You are about to skip your turn."
-      p "Continue? (y/n)"
+      puts "You are about to skip your turn."
+      puts "Continue? (y/n)"
       skip_turn = gets.chomp
       if skip_turn == "n"
         play_card(player)
       elsif skip_turn == "y"
-        p "Your turn was skipped."
+        puts "Your turn was skipped."
       else
-        p "Input not recognised."
+        puts "Input not recognised."
       end
     elsif player_position.to_i > player.player_played.length
-      p "Not a valid input."
+      puts "Not a valid input."
       play_card(player)
     else
       if player.player_played[(player_position.to_i) - 1].cost <= player.player_power
-        p player.player_played[(player_position.to_i) -1].card_details
+        puts player.player_played[(player_position.to_i) -1].card_details
 
         puts "Continue? (y/n):"
         player_continue = gets.chomp
@@ -307,7 +307,7 @@ def player_turn(player)
     puts "HEALTH: #{player.player_health}, POWER: #{player.player_power}"
     puts "----------".white
     for card in player.player_played
-      p card.card_details
+      puts card.card_details
     end
 
     puts "----------".white
