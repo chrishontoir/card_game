@@ -223,17 +223,20 @@ end
 def player_choose_deck(player)
   puts "#{player.player_name}, choose which deck you would like to use:"
   all_decks = []
-  # p player.player_decks[0].name
-  # player_deck_choice = gets.chomp
 
   for deck in player.player_decks
-    all_decks.push(deck.name)
+    all_decks.push(deck.name.upcase)
   end
-  puts all_decks
+  p all_decks
   player_deck_choice = gets.chomp
-  player.player_chosen_deck = player_deck_choice
-  puts player.player_chosen_deck
-  puts "----------".white
+  if all_decks.include?(player_deck_choice.upcase)
+    player.player_chosen_deck = player_deck_choice
+    puts player.player_chosen_deck.upcase
+    puts "----------".white
+  else
+    puts "Deck name not recognised."
+    player_choose_deck(player)
+  end
 end
 
 def play_card(player)
@@ -260,9 +263,20 @@ def play_card(player)
     else
       if player.player_played[(player_position.to_i) - 1].cost <= player.player_power
         p player.player_played[(player_position.to_i) -1].card_details
-        @damage = player.player_played[(player_position.to_i) -1].damage
-        player.player_health += player.player_played[(player_position.to_i) -1].healing
-        player.player_played.delete_at((player_position.to_i) - 1)
+
+        puts "Continue? (y/n):"
+        player_continue = gets.chomp
+        if player_continue == "n"
+          play_card(player)
+        elsif player_continue != "y" && player_continue != "n"
+          puts "Invalid input."
+        else
+          @damage = player.player_played[(player_position.to_i) -1].damage
+          player.player_health += player.player_played[(player_position.to_i) -1].healing
+          player.player_played.delete_at((player_position.to_i) - 1)
+        end
+
+
       else
         puts "Not enough power to play that card."
         play_card(player)
@@ -294,8 +308,13 @@ def player_turn(player)
     play_card(player)
 
     puts "----------".white
-    puts "Continue? (y/n):"
-    player_continue = gets.chomp
+    # puts "Continue? (y/n):"
+    # player_continue = gets.chomp
+    # if player_continue == "n"
+    #   play_card(player)
+    # elsif player_continue != "y" && player_continue != "n"
+    #   puts "Invalid input."
+    # end
     system "clear"
 
     if player.player_power < 5
@@ -359,6 +378,7 @@ def pre_game
     puts "Let's begin!"
     play_game(@player1, @player2)
   else
+    create_new_game()
     pre_game()
   end
 end
