@@ -59,6 +59,11 @@ def get_player_names
   puts "Player 2 enter your name:"
   @player2.player_name = gets.chomp.capitalize
 
+  if @player1.player_name == @player2.player_name
+    @player1.player_name = @player1.player_name + " 1"
+    @player2.player_name = @player2.player_name + " 2"
+  end
+
   system "clear"
 
   puts "Welcome #{@player1.player_name}."
