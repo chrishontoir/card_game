@@ -17,6 +17,7 @@ def create_new_game
   @lightning_bolt = Card.new("Lightning Bolt", 4, 0, 3)
   @wounding_strike = Card.new("Wounding Strike", 5, 0, 4)
   @crushing_blow = Card.new("Crushing Blow", 6, 0, 5)
+  @dynamite = Card.new("Dynamite", 7, 0, 6)
   @glancing_hit = Card.new("Glancing Hit", 2, 0, 1)
   @snowball = Card.new("Snowball", 3, 0, 2)
   @bite = Card.new("Bite", 1, 1, 1)
@@ -30,7 +31,7 @@ def create_new_game
   @default_deck_1.add_card_to_deck(@lightning_bolt)
   @default_deck_1.add_card_to_deck(@wounding_strike)
   @default_deck_1.add_card_to_deck(@crushing_blow)
-  @default_deck_1.add_card_to_deck(@bandage)
+  @default_deck_1.add_card_to_deck(@dynamite)
   @default_deck_1.add_card_to_deck(@bandage)
   @default_deck_1.add_card_to_deck(@health_potion)
   @default_deck_1.add_card_to_deck(@greater_health_potion)
@@ -41,7 +42,7 @@ def create_new_game
   @default_deck_2.add_card_to_deck(@lightning_bolt)
   @default_deck_2.add_card_to_deck(@wounding_strike)
   @default_deck_2.add_card_to_deck(@crushing_blow)
-  @default_deck_2.add_card_to_deck(@bandage)
+  @default_deck_2.add_card_to_deck(@dynamite)
   @default_deck_2.add_card_to_deck(@bandage)
   @default_deck_2.add_card_to_deck(@health_potion)
   @default_deck_2.add_card_to_deck(@greater_health_potion)
@@ -89,6 +90,7 @@ def available_cards
   puts @lightning_bolt.card_details
   puts @wounding_strike.card_details
   puts @crushing_blow.card_details
+  puts @dynamite.card_details
   puts "----------".white
   puts @bandage.card_details
   puts @health_potion.card_details
@@ -144,6 +146,10 @@ def build_new_deck(player)
       player.player_decks[-1].card_array.push(@crushing_blow)
       counter += 1
       puts "Added: #{@crushing_blow.name} (#{counter}/10)"
+    elsif new_card == "dynamite"
+      player.player_decks[-1].card_array.push(@dynamite)
+      counter += 1
+      puts "Added: #{@dynamite.name} (#{counter}/10)"
     elsif new_card == "bandage"
       player.player_decks[-1].card_array.push(@bandage)
       counter += 1
@@ -231,7 +237,7 @@ def player_choose_deck(player)
   player_deck_choice = gets.chomp
   if all_decks.include?(player_deck_choice.upcase)
     player.player_chosen_deck = player_deck_choice
-    puts player.player_chosen_deck.upcase
+    puts "#{player.player_chosen_deck.upcase} deck selected."
     puts "----------".white
   else
     puts "Deck name not recognised."
@@ -317,7 +323,7 @@ def player_turn(player)
     # end
     system "clear"
 
-    if player.player_power < 5
+    if player.player_power < 6
       player.player_gain_power(1)
     end
   else
@@ -378,7 +384,6 @@ def pre_game
     puts "Let's begin!"
     play_game(@player1, @player2)
   else
-    create_new_game()
     pre_game()
   end
 end
