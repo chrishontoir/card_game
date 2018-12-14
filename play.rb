@@ -259,6 +259,7 @@ def play_card(player)
       play_card(player)
     else
       if player.player_played[(player_position.to_i) - 1].cost <= player.player_power
+        p player.player_played[(player_position.to_i) -1].card_details
         @damage = player.player_played[(player_position.to_i) -1].damage
         player.player_health += player.player_played[(player_position.to_i) -1].healing
         player.player_played.delete_at((player_position.to_i) - 1)
