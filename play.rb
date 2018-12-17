@@ -11,6 +11,8 @@ def create_new_game
 
   @damage = 0
 
+  @total_cards = 20
+
   @default_deck_1 = Deck.new("Default", [])
   @default_deck_2 = Deck.new("Default", [])
 
@@ -102,13 +104,13 @@ def available_cards
   puts @greater_health_potion.card_details
 end
 
-def add_card_to_new_deck(card_name, new_card)
-  if new_card == card_name.name
-    player.player_decks[-1].card_array.push(card_name)
-    counter += 1
-    puts "Added: #{card_name.name} (#{counter}/5)"
-  end
-end
+# def add_card_to_new_deck(card_name, new_card)
+#   if new_card == card_name.name
+#     player.player_decks[-1].card_array.push(card_name)
+#     counter += 1
+#     puts "Added: #{card_name.name} (#{counter}/5)"
+#   end
+# end
 
 def build_new_deck(player)
   counter = 0
@@ -285,6 +287,8 @@ def play_card(player)
           @damage = player.player_played[(player_position.to_i) -1].damage
           player.player_health += player.player_played[(player_position.to_i) -1].healing
           player.player_played.delete_at((player_position.to_i) - 1)
+
+          @total_cards -= 1
         end
 
 
@@ -303,7 +307,8 @@ def player_turn(player)
       player.player_playing_deck[0].card_array.shift
     end
   end
-  if player.player_played.length > 0
+  # if player.player_played.length > 0
+  if @total_cards > 0
     player.player_health -= @damage
     puts "------------------------------"
     puts "-----------WELCOME!-----------"
